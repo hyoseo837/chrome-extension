@@ -1,0 +1,1 @@
+var letter = document.getElementById('char2');

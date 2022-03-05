@@ -1,0 +1,31 @@
+{
+    "name": "My Second Extension",
+    "description" :"Base Level Extension",
+    "version" : "1.0",
+    "manifest_version": 3,
+    "options_page" : "options.html",
+
+    "background" : {
+        "service_worker" : "background.js"
+    },
+
+    "action":{
+        "default_popup" : "popup.html",
+        "default_icon"  : {
+          "16": "/image/hello_extensions.png",
+          "32": "/image/hello_extensions.png",
+          "48": "/image/hello_extensions.png",
+          "128": "/image/hello_extensions.png"
+        }
+    },
+
+    "icons" : {
+        "16": "/image/hello_extensions.png",
+        "32": "/image/hello_extensions.png",
+        "48": "/image/hello_extensions.png",
+        "128": "/image/hello_extensions.png"
+    }
+
+} 
+
+

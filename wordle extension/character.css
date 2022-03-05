@@ -1,0 +1,40 @@
+/* #6aaa64
+#c9b458
+#787c7e */
+body { 
+    min-width: 250px;
+    
+}
+.chars{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 30px;
+    max-width: 40px;
+    min-width: 40px;
+    border : 0px;
+    border-radius: 1px;
+    margin:0;
+    background-color: #6aaa64;
+    position: relative;
+}
+#keyboard{
+    align-items: center;
+}
+.keys{
+    max-width: 15px;
+    min-width: 15px;
+    padding: 0;
+    text-align: center;
+    font-size: 5px;
+    border: none;
+    background-color: white;
+}
+#current-word {
+    background-position-x: 50%;
+}
+
+input{
+    margin: 20px;
+    margin-top: 30px;
+    border-color: lightgray;
+    border-radius: 3px;
+}
