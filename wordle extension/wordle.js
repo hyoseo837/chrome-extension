@@ -1,6 +1,10 @@
+var possible_guesses
+var possible_answers 
+const colors = ["#3a3a3c", "#b59f3b", "#538d4e"]
 
-var possible_guesses;
-function readTextFile(file)
+var today = parseInt(Date.now() / (1000*60*60*24))
+
+function readTextFile(file,id)
 {
     var rawFile = new XMLHttpRequest();
     rawFile.open("GET", file, false);
@@ -11,14 +15,41 @@ function readTextFile(file)
             if(rawFile.status === 200 || rawFile.status == 0)
             {
                 var allText = rawFile.responseText;
-                possible_guesses = allText.split("\r\n")
+                if (id == 1){
+                    possible_answers = allText.split("\r\n");
+                }
+                else if(id == 2){
+                    possible_guesses = allText.split("\r\n");
+                }
             }
         }
     }
     rawFile.send(null);
 }
-readTextFile("possible_words.txt");
 
+function checkAnswer(tgt,ans){
+    var result = [0,0,0,0,0];
+    for(let i = 0; i<5; i++){
+        if (tgt[i] == ans[i]){
+            result[i] = 2;
+            continue
+        }
+        for(let j=0;j<5;j++){
+            if (ans[j] == tgt[i] && result[j] == 0){
+                result[j] = 1;
+                break
+            }
+        }
+    }
+    return result
+}
+
+
+
+readTextFile("wordle-answers-shuffled.txt",1);
+readTextFile("possible_words.txt",2);
+
+var target = possible_answers[today % possible_answers.length]
 var words = [];
 words.push(document.getElementById('word_1'));
 words.push(document.getElementById('word_2'));
@@ -48,16 +79,24 @@ for (let index = 0; index < keyboard.length; index++) {
 
 var backspace = document.getElementById("backspace")
 backspace.addEventListener("click", ()=>{
-    if(curser>0){letters[curser-1].innerHTML = "-"
+    if(curser>0){letters[curser-1].innerHTML = "_"
     curser--;}
 })
 
 var submit = document.getElementById("submit")
 submit.addEventListener("click", ()=>{
     if (curser==5){
-        answer = letters[0].innerHTML + letters[1].innerHTML + letters[2].innerHTML + letters[3].innerHTML + letters[4].innerHTML;
-        if (possible_guesses.includes(answer)){
-            alert("something")
+        answer = letters[0].innerHTML + letters[1].innerHTML + letters[2].innerHTML 
+        + letters[3].innerHTML + letters[4].innerHTML;
+        if (possible_guesses.includes(answer.toLowerCase()) || 
+        possible_answers.includes(answer.toLowerCase())){
+            var results = checkAnswer(target.toUpperCase(),answer)
+            for (let index = 0; index < 5; index++) {
+                letters[index].style.backgroundColor = colors[results[index]]
+            }
+            if (results == [2,2,2,2,2]){
+                alert("you got it!!!")
+            }
             trial ++;
             curser = 0;
             letters = [

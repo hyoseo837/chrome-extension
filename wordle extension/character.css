@@ -9,12 +9,14 @@ body {
 .chars{
     font-family: 'Times New Roman', Times, serif;
     font-size: 30px;
+    color: aliceblue;
     max-width: 40px;
     min-width: 40px;
+    min-height: 40px;
     border : 0px;
     border-radius: 1px;
     margin:0;
-    background-color: #6aaa64;
+    background-color: #202020;
     position: relative;
 }
 #keyboard{
