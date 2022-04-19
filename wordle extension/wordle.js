@@ -90,7 +90,10 @@ submit.addEventListener("click", ()=>{
         + letters[3].innerHTML + letters[4].innerHTML;
         if (possible_guesses.includes(answer.toLowerCase()) || 
         possible_answers.includes(answer.toLowerCase())){
-            var results = checkAnswer(target.toUpperCase(),answer)
+            var results = checkAnswer(target.toUpperCase(),answer);
+            if (results == [2,2,2,2,2]){
+                alert("you got it!!!");
+            }
             for (let index = 0; index < 5; index++) {
                 letters[index].style.backgroundColor = colors[results[index]]
             }
