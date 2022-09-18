@@ -27,6 +27,9 @@ function initialize(high){
     obstacles = [];
     if (high > highscore){
         highscore = high;
+        chrome.storage.sync.set({record: high}, function() {
+            console.log('Value is set to ' + high);
+        });
     }
 }
 
@@ -163,7 +166,11 @@ function gameApp(){
 } 
 
 var running = true;
-initialize(0);
+chrome.storage.sync.get(['record'], function(result) {
+  console.log('Value currently is ' + result.record);
+    initialize(result.record);
+});
+
 setInterval(gameApp,16);
 
 c.addEventListener("mousedown",()=>
