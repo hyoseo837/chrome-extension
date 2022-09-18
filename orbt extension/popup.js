@@ -1,6 +1,5 @@
 import {obs} from "./obstacle.js"
 
-
 var ang =0;
 var rad = 100;
 var score = 0;
@@ -8,11 +7,14 @@ var scoregage = 0;
 var highscore = 0;
 var pressed = false;
 
+var cnt= 0;
+var obtcnt = 0;
+
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 var grd = ctx.createRadialGradient(0,0,0,0,0,0);
 
-var obstacles = [new obs(5,Math.PI,0.5,"red"),new obs(5,Math.PI*0.2,0.3,"purple")];
+var obstacles = [];
 var delList = [];
 
 function initialize(high){
@@ -22,7 +24,7 @@ function initialize(high){
     scoregage = 0;
     pressed = false;
     delList = [];
-    obstacles = [new obs(5,Math.PI,1.3,"red"),new obs(5,Math.PI*0.2,0.9,"purple"),new obs(8,Math.PI*1.3,0.3,"skyblue")];
+    obstacles = [];
     if (high > highscore){
         highscore = high;
     }
@@ -35,6 +37,7 @@ function obsUpdate(size){
 
         if (element.checkHit(size/2 + Math.sin(ang)*rad,size/2 - Math.cos(ang)*rad,7)){
             running = false;
+            cnt = 60;
         }
 
         if (element.update(300)){delList.push(index)};
@@ -43,7 +46,6 @@ function obsUpdate(size){
         const element = delList[index];
         obstacles.splice(element,1);
     }
-
 
 }
 
@@ -79,7 +81,7 @@ function drawSun(ctx,size){
 }
 
 function drawEarth(ctx,size,ang,mag){
-    ctx.fillStyle = "green";
+    ctx.fillStyle = "lightgreen";
     ctx.beginPath();
     ctx.arc(size/2 + Math.sin(ang)*mag,size/2 - Math.cos(ang)*mag,7,0,2*Math.PI);
     ctx.fill();
@@ -88,7 +90,6 @@ function drawEarth(ctx,size,ang,mag){
 function drawObs(ctx){
     for (let index = 0; index < obstacles.length; index++) {
         const element = obstacles[index];
-        console.log(element.pos)
         ctx.fillStyle = element.color;
         ctx.beginPath();
         ctx.arc(element.pos[0],element.pos[1],element.size,0,2*Math.PI);
@@ -107,6 +108,7 @@ function drawStage(){
     if (rad < 27){
         rad = 27;
         running = false;
+        cnt = 60;
     }
     if (rad > 140){
         rad = 140;
@@ -117,6 +119,15 @@ function drawStage(){
         score++;
         scoregage -= 100;
     }
+
+    if(Math.random()*1000 < 6){
+        obstacles.push(new obs(Math.random()*5+4,Math.random()*2*Math.PI,Math.random()+0.3,'skyblue'))
+    }
+    if(obtcnt<0){
+        obstacles.push(new obs(Math.random()*6+7,Math.random()*2*Math.PI,Math.random()*0.5+0.2,'red'))
+        obtcnt += 200;
+    }
+    obtcnt --;
 
     obsUpdate(300);
 
@@ -138,6 +149,7 @@ function drawMenu(){
     ctx.fillText("score : "+score.toString(),300/2,500/5);
     ctx.fillText("highscore : "+highscore.toString(),300/2,600/5);
     ctx.fillText("Click again to restart",300/2,200);
+    cnt--;
 
 }
 
@@ -158,8 +170,10 @@ c.addEventListener("mousedown",()=>
 {
     pressed = true;
     if (!running){
-        running = true;
-        initialize(score);
+        if (cnt < 0){
+            running = true;
+            initialize(score);
+        }
     }
 })
 c.addEventListener("mouseup",()=>
