@@ -75,7 +75,7 @@ function drawScoregage(ctx,size,scoregage){
 function drawSun(ctx,size){
     grd = ctx.createRadialGradient(size/2, size/2, 1, size/2, size/2, 20)
     grd.addColorStop(0.5,"#111111");
-    grd.addColorStop(1,"#BF40BF");
+    grd.addColorStop(1,"#fcba03");
     ctx.fillStyle = grd
     ctx.beginPath();
     ctx.arc(size/2, size/2, 20, 0, 2 * Math.PI);
@@ -151,7 +151,7 @@ function drawMenu(){
     ctx.font = "15px Arial";
     ctx.fillText("score : "+score.toString(),300/2,500/5);
     ctx.fillText("highscore : "+highscore.toString(),300/2,600/5);
-    ctx.fillText("Click again to restart",300/2,200);
+    ctx.fillText("Click again to start",300/2,200);
     cnt--;
 
 }
@@ -165,7 +165,7 @@ function gameApp(){
     }
 } 
 
-var running = true;
+var running = false;
 chrome.storage.sync.get(['record'], function(result) {
   console.log('Value currently is ' + result.record);
     initialize(result.record);
@@ -187,3 +187,21 @@ c.addEventListener("mouseup",()=>
 {
     pressed = false;
 })
+
+window.addEventListener("keydown", (event) => {
+    if (event.isComposing || event.key === " ") {
+        pressed = true;
+        if (!running){
+            if (cnt < 0){
+                running = true;
+                initialize(score);
+            }
+        };
+    }})
+
+
+window.addEventListener("keyup", (event) => {
+    if (event.isComposing || event.key === " ") {
+    pressed = false;}
+})
+
