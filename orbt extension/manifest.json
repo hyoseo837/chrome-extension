@@ -1,7 +1,7 @@
 {
     "name": "keep Orbt",
     "description" :"Base Level Extension",
-    "version" : "1.0",
+    "version" : "1.1",
     "manifest_version": 3,
     "options_page" : "options.html",
 
@@ -29,7 +29,6 @@
         "48": "/image/orbit_icon.png",
         "128": "/image/orbit_icon.png"
     }
-
 } 
 
 

@@ -1,4 +1,5 @@
 import {obs} from "./obstacle.js"
+import {item} from "./item.js"
 
 var ang =0;
 var rad = 100;
@@ -15,22 +16,30 @@ var ctx = c.getContext("2d");
 var grd = ctx.createRadialGradient(0,0,0,0,0,0);
 
 var obstacles = [];
+var items = [];
 var delList = [];
 
 function initialize(high){
     ang =0;
     rad = 100;
     score = 0;
+    if (high > highscore){
+        highscore = high;}
     scoregage = 0;
     pressed = false;
     delList = [];
     obstacles = [];
+    items = [];
+}
+function gameEnd(high){
     if (high > highscore){
         highscore = high;
         chrome.storage.sync.set({record: high}, function() {
             console.log('Value is set to ' + high);
         });
     }
+    running = false;
+    cnt = 60;
 }
 
 function obsUpdate(size){
@@ -39,8 +48,7 @@ function obsUpdate(size){
         const element = obstacles[index];
 
         if (element.checkHit(size/2 + Math.sin(ang)*rad,size/2 - Math.cos(ang)*rad,7)){
-            running = false;
-            cnt = 60;
+            gameEnd(score)
         }
 
         if (element.update(300)){delList.push(index)};
@@ -49,7 +57,25 @@ function obsUpdate(size){
         const element = delList[index];
         obstacles.splice(element,1);
     }
+}
 
+function itemUpdate(size){
+    delList = [];
+    for (let index = 0; index < items.length; index++) {
+        const element = items[index];
+        if (element.checkHit(size/2 + Math.sin(ang)*rad,size/2 - Math.cos(ang)*rad,7)){
+            // item effect
+            if (element.type == "+3"){
+                score += 3
+            }
+            delList.push(index)
+        }
+        if (element.update(300)){delList.push(index)};
+    }
+    for (let index = 0; index < delList.length; index++) {
+        const element = delList[index];
+        items.splice(element,1);
+    } 
 }
 
 function drawBackground(ctx, size){
@@ -69,7 +95,7 @@ function drawScore(ctx,size,score){
 
 function drawScoregage(ctx,size,scoregage){
     ctx.fillStyle = "white";
-    ctx.fillRect(size/2-scoregage,size-30,scoregage*2,5)
+    ctx.fillRect(size/2-scoregage,size-20,scoregage*2,5)
 }
 
 function drawSun(ctx,size){
@@ -100,6 +126,17 @@ function drawObs(ctx){
     }
 }
 
+function drawItem(ctx){
+    for (let index = 0; index < items.length; index++) {
+        const element = items[index];
+        ctx.fillStyle = element.color;
+        ctx.beginPath();
+        ctx.arc(element.pos[0],element.pos[1],element.size,0,2*Math.PI);
+        ctx.fill();
+        console.log("aaa")
+    }
+}
+
 function drawStage(){
     ang += 0.051-0.00028*rad;
     if (ang > 2*Math.PI){
@@ -109,9 +146,7 @@ function drawStage(){
     else{rad -= 0.7;}
     
     if (rad < 27){
-        rad = 27;
-        running = false;
-        cnt = 60;
+        gameEnd(score)
     }
     if (rad > 140){
         rad = 140;
@@ -124,19 +159,25 @@ function drawStage(){
     }
 
     if(Math.random()*1000 < 6){
-        obstacles.push(new obs(Math.random()*5+4,Math.random()*2*Math.PI,Math.random()+0.3,'skyblue'))
+        obstacles.push(new obs(Math.random()*3+6,Math.random()*2*Math.PI,Math.random()+0.3,'skyblue'))
     }
+    if(Math.random()*1000 < 2){
+        items.push(new item("+3",Math.random()*Math.PI*2))
+    }
+
     if(obtcnt<0){
-        obstacles.push(new obs(Math.random()*6+7,Math.random()*2*Math.PI,Math.random()*0.5+0.2,'red'))
+        obstacles.push(new obs(Math.random()*4+7,Math.random()*2*Math.PI,Math.random()*0.5+0.2,'red'))
         obtcnt += 200;
     }
     obtcnt --;
 
     obsUpdate(300);
+    itemUpdate(300);
 
     drawBackground(ctx,300);
     drawEarth(ctx,300,ang,rad);
     drawObs(ctx);
+    drawItem(ctx);
     drawScore(ctx,300,score);
     drawScoregage(ctx,300,scoregage);
     drawSun(ctx,300);
@@ -167,7 +208,7 @@ function gameApp(){
 
 var running = false;
 chrome.storage.sync.get(['record'], function(result) {
-  console.log('Value currently is ' + result.record);
+    console.log('Value currently is ' + result.record);
     initialize(result.record);
 });
 
@@ -197,9 +238,7 @@ window.addEventListener("keydown", (event) => {
                 initialize(score);
             }
         };
-    }})
-
-
+}})
 window.addEventListener("keyup", (event) => {
     if (event.isComposing || event.key === " ") {
     pressed = false;}
