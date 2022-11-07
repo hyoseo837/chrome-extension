@@ -1,12 +1,13 @@
 class item{
-    constructor(type,dir){
+    constructor(type,dir,img){
         this.type = type;
         this.size = 7
         this.dir = dir;
         this.speed = 0.7;
         this.height = 170;
         this.pos = [0,0];
-        this.color = "#e6e6e6";
+        this.color = "#ffd700";
+        this.img = img
     }
 
     update(size){

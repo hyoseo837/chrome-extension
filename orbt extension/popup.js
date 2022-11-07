@@ -129,11 +129,7 @@ function drawObs(ctx){
 function drawItem(ctx){
     for (let index = 0; index < items.length; index++) {
         const element = items[index];
-        ctx.fillStyle = element.color;
-        ctx.beginPath();
-        ctx.arc(element.pos[0],element.pos[1],element.size,0,2*Math.PI);
-        ctx.fill();
-        console.log("aaa")
+        ctx.drawImage(element.img, element.pos[0]-14, element.pos[1]-14);
     }
 }
 
@@ -162,7 +158,7 @@ function drawStage(){
         obstacles.push(new obs(Math.random()*3+6,Math.random()*2*Math.PI,Math.random()+0.3,'skyblue'))
     }
     if(Math.random()*1000 < 2){
-        items.push(new item("+3",Math.random()*Math.PI*2))
+        items.push(new item("+3",Math.random()*Math.PI*2,document.getElementById("item_icon")))
     }
 
     if(obtcnt<0){
