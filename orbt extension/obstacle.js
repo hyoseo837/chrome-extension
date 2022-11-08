@@ -4,7 +4,7 @@ class obs{
         this.dir = dir;
         this.speed = speed;
         this.color = color;
-        this.height = 160
+        this.height = 180
         this.pos = [0,0]
     }
     

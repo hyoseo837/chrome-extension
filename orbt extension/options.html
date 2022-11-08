@@ -3,4 +3,14 @@
     <head>
         <p>html is not programming langugage</p>
     </head>
+    <body>
+        <div>
+            <button onclick="resetStorage"> reset extension </button>
+        </div>
+        <script>
+        function resetStorage(){
+            chrome.storage.sync.remove(["tuto_skip"]); // callback is optional
+        }
+        </script>
+    </body>
 </html>
