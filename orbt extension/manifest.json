@@ -1,7 +1,7 @@
 {
     "name": "keep Orbt",
     "description" :"Base Level Extension",
-    "version" : "1.1",
+    "version" : "1.2",
     "manifest_version": 3,
     "options_page" : "options.html",
 
