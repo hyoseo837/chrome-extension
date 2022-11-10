@@ -5,12 +5,8 @@
     </head>
     <body>
         <div>
-            <button onclick="resetStorage"> reset extension </button>
+            <button id="reset"> reset extension </button>
         </div>
-        <script>
-        function resetStorage(){
-            chrome.storage.sync.remove(["tuto_skip"]); // callback is optional
-        }
-        </script>
     </body>
+    <script src="options.js"></script>
 </html>
